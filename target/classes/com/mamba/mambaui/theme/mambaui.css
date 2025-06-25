@@ -1,0 +1,12 @@
+@import "circularbutton.css";
+@import "modal.css";
+
+/* variables.css */
+:root {
+    /* Circular Button Variables */        
+    -circular-hover-bg: rgba(0, 0, 0, 0.05);
+    -circular-hover-border: rgba(0, 0, 0, 0.2);
+    -circular-pressed-bg: rgba(0, 0, 0, 0.1);
+    -circular-close-icon-fill: black;
+    -circular-close-icon-size: 20px;
+}
