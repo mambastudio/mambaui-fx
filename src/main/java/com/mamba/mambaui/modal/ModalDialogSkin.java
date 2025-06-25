@@ -38,9 +38,13 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
     
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
-        this.dialog = dialog;
-        
+        this.dialog = dialog;        
         root = new StackPane();
+        this.pane.getStyleClass().add("pane");
+    }
+    
+    private void initGraphics(){
+        
     }
     
     protected BorderPane getBorderPane(){
