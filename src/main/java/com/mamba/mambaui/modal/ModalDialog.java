@@ -4,6 +4,7 @@
  */
 package com.mamba.mambaui.modal;
 
+import com.mamba.mambaui.MambauiTheme;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
@@ -32,7 +33,7 @@ public class ModalDialog<T> extends Control{
     private boolean exited = true;
         
     public ModalDialog(){        
-        getStyleClass().add("modal-layer");  
+        getStyleClass().add("modal");  
         hide();
         
         content.addListener((o, ov, nv)->{
@@ -63,11 +64,9 @@ public class ModalDialog<T> extends Control{
     // Optional if using custom stylesheet
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("modaldialog.css").toExternalForm();
+        return MambauiTheme.SHEET; // shared master file with @import "tile.css"
     }
         
-  
-
     public Node getContent() {
         return content.get();
     }

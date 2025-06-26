@@ -10,6 +10,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -33,55 +34,69 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
     double edgeOffsetX, edgeOffsetY;
     
     protected final StackPane root;
-    protected final ModalDialog dialog; 
-    protected final BorderPane pane = new BorderPane();
+    protected final BorderPane dialogPane = new BorderPane();
     
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
-        this.dialog = dialog;        
+            
         root = new StackPane();
-        this.pane.getStyleClass().add("pane");
+        initGraphics();        
     }
     
     private void initGraphics(){
+        this.dialogPane.getStyleClass().add("pane");
         
+        root.getChildren().add(dialogPane); //add pane first to root stack
+        getChildren().add(root); //add root to skin
+        
+        dialogPane.setMaxSize(300, 300);
+        dialogPane.setPrefSize(300, 300);
+        
+        dialogPane.setOnMouseMoved(this::handleMouseMoved);
+        dialogPane.setOnMousePressed(this::handleMousePressed);
+        dialogPane.setOnMouseDragged(this::handleMouseDragged);
+        
+        //Re-center automatically when parent resizes
+        dialogPane.parentProperty().addListener((obs, oldParent, newParent) -> {
+            if (newParent instanceof Pane parent) {
+                parent.widthProperty().addListener((o, ov, nv) -> dialogPane.requestLayout());
+                parent.heightProperty().addListener((o, ov, nv) -> dialogPane.requestLayout());
+            }
+        });
     }
     
     protected BorderPane getBorderPane(){
-        return pane;
+        return dialogPane;
     }
     
     @Override
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight){
-        super.layoutChildren(contentX, contentY, contentWidth, contentHeight); 
-        
-        pane.resizeRelocate(contentX, contentY, contentWidth, contentHeight);
-        pane.setMaxSize(contentWidth, contentHeight);
+        super.layoutChildren(contentX, contentY, contentWidth, contentHeight);         
     }
     
     private void handleMouseMoved(MouseEvent e) {
-        dialog.setCursor(cursorForResizeMode(currentResize));
-        currentResize = getResizeMode(e.getX(), e.getY(), dialog.getWidth(), dialog.getHeight());
+        dialogPane.setCursor(cursorForResizeMode(currentResize));
+        currentResize = getResizeMode(e.getX(), e.getY(), dialogPane.getWidth(), dialogPane.getHeight());
         
     }
     
     private void handleMousePressed(MouseEvent e) {
         if (currentResize != ResizeMode.NONE) {
             e.consume();
-            pressWidth = dialog.getWidth();
-            pressHeight = dialog.getHeight();
+            pressWidth = dialogPane.getWidth();
+            pressHeight = dialogPane.getHeight();
 
-            pressCenterX = dialog.getLayoutX() + pressWidth / 2;
-            pressCenterY = dialog.getLayoutY() + pressHeight / 2;
+            pressCenterX = dialogPane.getLayoutX() + pressWidth / 2;
+            pressCenterY = dialogPane.getLayoutY() + pressHeight / 2;
             
             edgeOffsetX = switch (currentResize) {
-                case EAST, NORTH_EAST, SOUTH_EAST -> dialog.getWidth() - e.getX();
+                case EAST, NORTH_EAST, SOUTH_EAST -> dialogPane.getWidth() - e.getX();
                 case WEST, NORTH_WEST, SOUTH_WEST -> e.getX();
                 default -> 0;
             };
             
             edgeOffsetY = switch (currentResize) {
-                case SOUTH, SOUTH_EAST, SOUTH_WEST -> dialog.getHeight() - e.getY();
+                case SOUTH, SOUTH_EAST, SOUTH_WEST -> dialogPane.getHeight() - e.getY();
                 case NORTH, NORTH_EAST, NORTH_WEST -> e.getY();
                 default -> 0;
             };
@@ -99,11 +114,11 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
         double dx = px - pressCenterX;
         double dy = py - pressCenterY;
 
-        double halfMinW = dialog.getMinWidth() / 2;
-        double halfMinH = dialog.getMinHeight() / 2;
+        double halfMinW = dialogPane.getMinWidth() / 2;
+        double halfMinH = dialogPane.getMinHeight() / 2;
 
-        double newWidth = dialog.getWidth();
-        double newHeight = dialog.getHeight();
+        double newWidth = dialogPane.getWidth();
+        double newHeight = dialogPane.getHeight();
 
         boolean widthChanged = false;
         boolean heightChanged = false;
@@ -139,16 +154,16 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
         }
 
         if (widthChanged) {
-            dialog.setMaxWidth(newWidth);
-            pressWidth = newWidth; // update reference point
+            dialogPane.setMaxWidth(newWidth);
+            pressWidth = newWidth; // update reference point            
         }
 
         if (heightChanged) {
-            dialog.setMaxHeight(newHeight);
+            dialogPane.setMaxHeight(newHeight);
             pressHeight = newHeight; // update reference point
         }
 
-        dialog.requestLayout();
+        dialogPane.requestLayout();
     }
     
     private ResizeMode getResizeMode(double x, double y, double w, double h) {
@@ -183,8 +198,8 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
     }
     
     private Point2D point(MouseEvent e){
-        double px = e.getSceneX() - dialog.getParent().localToScene(0, 0).getX();
-        double py = e.getSceneY() - dialog.getParent().localToScene(0, 0).getY();
+        double px = e.getSceneX() - dialogPane.getParent().localToScene(0, 0).getX();
+        double py = e.getSceneY() - dialogPane.getParent().localToScene(0, 0).getY();
         return new Point2D(px, py);
     }   
 }

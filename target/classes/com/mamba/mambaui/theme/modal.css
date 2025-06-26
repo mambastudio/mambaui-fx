@@ -1,3 +1,12 @@
+.modal .pane{
+    -fx-background-color: -fx-background;
+    -fx-border-color: -fx-box-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 10;
+    /*-fx-effect: dropshadow(gaussian, derive(-fx-box-border, 5%), 12, 0.5, 1, 1);*/
+}
+
 .modal .tile .circular-button {
     -fx-background-radius: 100%;
     -fx-border-radius: 100%;

@@ -1,2 +1,4 @@
 closebutton\CloseButtonLauncher.class
+modal\ModalLauncher.class
+modal\ModalApplication.class
 closebutton\CloseButtonApplication.class
