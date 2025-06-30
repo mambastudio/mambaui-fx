@@ -2,11 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package modal;
+package tile;
 
+
+import com.mamba.mambaui.LoremIpsum;
 import com.mamba.mambaui.MambauiTheme;
-import com.mamba.mambaui.modal.ModalDialog;
+import com.mamba.mambaui.MambauiUtility;
+import com.mamba.mambaui.control.Tile;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -16,22 +20,25 @@ import javafx.stage.Stage;
  *
  * @author user
  */
-public class ModalApplication extends Application{
+public class TileApplication  extends Application{
+
     @Override
     public void start(Stage stage) throws Exception {
         
-        ModalDialog dialog = new ModalDialog();
+        Tile tile = new Tile("JOSTO", LoremIpsum.getLine());
+        tile.setRight(new Button("X"));
+        tile.setPrefHeight(80);
+        tile.setPadding(new Insets(5));
         
-        
-        Scene scene = new Scene(new StackPane(dialog), 1000, 1000);
+        Scene scene = new Scene(new StackPane(tile), 200, 200);
         
         MambauiTheme.applyTo(scene);
         
-        stage.setTitle("Close Button Viewer");
+        stage.setTitle("Tile");
         stage.setScene(scene);
         stage.show();
-        
-        
-        dialog.showAndWait();
     }
+    
+    
+    
 }

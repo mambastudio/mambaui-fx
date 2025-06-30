@@ -4,8 +4,12 @@
  */
 package com.mamba.mambaui.modal;
 
+import com.mamba.mambaui.MambauiUtility;
+import com.mamba.mambaui.control.Tile;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Skin;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseEvent;
@@ -35,6 +39,8 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
     
     protected final StackPane root;
     protected final BorderPane dialogPane = new BorderPane();
+    protected Tile header = new Tile();
+    protected Button closeBtn = MambauiUtility.buttonIcon("mdal-close", 30, "circular-button", "close-icon");
     
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
@@ -44,7 +50,9 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
     }
     
     private void initGraphics(){
-        this.dialogPane.getStyleClass().add("pane");
+        this.dialogPane.getStyleClass().add("pane"); 
+        header.setPrefHeight(90);
+        dialogPane.setTop(header);
         
         root.getChildren().add(dialogPane); //add pane first to root stack
         getChildren().add(root); //add root to skin
@@ -202,4 +210,30 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
         double py = e.getSceneY() - dialogPane.getParent().localToScene(0, 0).getY();
         return new Point2D(px, py);
     }   
+        
+    public void setHeader(String title) {
+        header.setHeader(title);
+    }
+
+    public void setHeader(String title, String description) {
+        header.setHeader(title);
+        header.setDescription(description);
+    }
+
+    public void setHeader(Node graphic, String title, String description) {
+        header.setHeader(title);
+        header.setDescription(description);
+        header.setLeft(graphic);
+    }
+    
+    public void setGraphic(Node graphic){
+        header.setLeft(graphic);
+    }
+
+    public void setCloseButtonActive(boolean active) {
+        switch(active){
+            case true -> header.setRight(closeBtn);
+            case false -> header.setRight(null);
+        }
+    }
 }

@@ -22,7 +22,7 @@ import javafx.scene.control.Skin;
  * @author user
  * @param <T>
  */
-public class ModalDialog<T> extends Control{
+public class ModalDialog<T> extends Control implements ModalDialogBase{
     private static final StyleablePropertyFactory<ModalDialog> FACTORY =
             new StyleablePropertyFactory<>(Control.getClassCssMetaData());
     
@@ -31,6 +31,8 @@ public class ModalDialog<T> extends Control{
     private Optional<T> result = Optional.empty();
     
     private boolean exited = true;
+    
+    
         
     public ModalDialog(){        
         getStyleClass().add("modal");  
@@ -59,7 +61,7 @@ public class ModalDialog<T> extends Control{
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {return FACTORY.getCssMetaData();}
     @Override public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {return getClassCssMetaData();}
     
-     protected ModalDialogSkin getModalSkin(){return (ModalDialogSkin)getSkin();}
+    protected ModalDialogSkin getModalSkin(){return (ModalDialogSkin)getSkin();}
     
     // Optional if using custom stylesheet
     @Override
@@ -100,6 +102,7 @@ public class ModalDialog<T> extends Control{
         }
     }
     
+    @Override
     public Optional<T> showAndWait() {
         exited = false;
         // Bring ModalLayer to the top and make it visible
@@ -122,5 +125,30 @@ public class ModalDialog<T> extends Control{
         // Send ModalLayer far to the back and make it fully transparent
         hide();
         safeExitLoop();
+    }
+
+    @Override
+    public void setHeader(String title) {
+        getModalSkin().setHeader(title);
+    }
+
+    @Override
+    public void setHeader(String title, String description) {
+        getModalSkin().setHeader(title, description);
+    }
+
+    @Override
+    public void setHeader(Node graphic, String title, String description) {
+        getModalSkin().setHeader(graphic, title, description);
+    }
+
+    @Override
+    public void setCloseButtonActive(boolean active) {
+        getModalSkin().setCloseButtonActive(active);
+    }
+
+    @Override
+    public void setGraphic(Node graphic) {
+        getModalSkin().setGraphic(graphic);
     }
 }

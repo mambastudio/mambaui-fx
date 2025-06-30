@@ -6,6 +6,8 @@ com\mamba\mambaui\control\Tile$RectTile.class
 com\mamba\mambaui\base\RectLayout$RectCutSide.class
 com\mamba\mambaui\base\RectLayout.class
 com\mamba\mambaui\base\RectLayout$Rect.class
+com\mamba\mambaui\LoremIpsum.class
+com\mamba\mambaui\modal\ModalDialogBase.class
 com\mamba\mambaui\modal\ModalDialogSkin$ResizeMode.class
 com\mamba\mambaui\base\RectLayout$RectPair.class
 com\mamba\mambaui\MambauiFx.class
