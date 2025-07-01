@@ -13,6 +13,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -26,7 +27,7 @@ public class TileApplication  extends Application{
     public void start(Stage stage) throws Exception {
         
         Tile tile = new Tile("JOSTO", LoremIpsum.getLine());
-        tile.setRight(new Button("X"));
+        //tile.setRight(new Label());
         tile.setPrefHeight(80);
         tile.setPadding(new Insets(5));
         

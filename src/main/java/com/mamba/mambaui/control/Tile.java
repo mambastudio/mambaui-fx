@@ -8,6 +8,7 @@ import com.mamba.mambaui.MambauiTheme;
 import com.mamba.mambaui.base.RectLayout.Rect;
 import com.mamba.mambaui.base.RectLayout.RectCut;
 import com.mamba.mambaui.base.RectLayout.RectCutSide;
+import java.io.IO;
 import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -143,8 +144,12 @@ public class Tile extends Region{
         
         if (w < 10 || h < 10) return;
         
-        RectCut layoutRect = new RectCut(x, y, x + w, y + h);          
+        RectCut layoutRect = new RectCut(x, y, x + w, y + h);    
+        
+        //IO.println(this.getParent().prefWidth(-1));
         RectTile tileLayout = getRects(layoutRect);
+        
+        
                                
         if(tileLayout.hasLeft()){            
             layoutInArea(
@@ -205,27 +210,28 @@ public class Tile extends Region{
     }
     
     @Override
-    protected double computePrefWidth(double height){             
+    protected double computePrefWidth(double height){   
         return Double.MAX_VALUE;
     }
         
     @Override
-    protected double computePrefHeight(double width){              
+    protected double computePrefHeight(double width){    
         if (width <= 0 || Double.isNaN(width)) 
-            return 0;    
-        
+            return 0;            
         return getRects(new RectCut(viewBound())).bound().height() + totalInsetsHeight();
     }
     
     
     @Override
-    protected double computeMaxWidth(double height){     
+    protected double computeMaxWidth(double height){               
         return Double.MAX_VALUE;
     }
     
             
     private RectTile getRects(RectCut rectCut){
         Rect lRect = new Rect(), hRect = new Rect(), dRect = new Rect(), rRect = new Rect();
+        
+        
         
         if(left != null){
             rectCut = rectCut.cutRemaining(RectCutSide.LEFT, left.prefWidth(-1));
@@ -240,9 +246,10 @@ public class Tile extends Region{
         }
         
         if(header != null){
+            
             rectCut = rectCut.cutRemaining(RectCutSide.TOP, header.prefHeight(rectCut.remainingRect().width()));            
             hRect = rectCut.rect();
-            rectCut = rectCut.expand(margin);
+            rectCut = rectCut.expand(margin);            
         }
         
         if(description != null){              
@@ -263,19 +270,24 @@ public class Tile extends Region{
         
         if(left != null)            
             lRect = new Rect(left.prefWidth(-1), left.prefHeight(-1));
+        
         if(header != null){
             hRect = new Rect(header.prefWidth(-1), header.prefHeight(-1));    
+            
             if(hRect.width() < 10)
                 hRect = new Rect(10, hRect.height());
             if(hRect.height()< 10)
                 hRect = new Rect(hRect.width(), 10);
-            hRect = lRect.placeRight(hRect, margin);
+            
+            if(lRect.isNotEmpty())
+                hRect = lRect.placeRight(hRect, margin);            
         }
+                
         if(right != null){
             rRect = new Rect(right.prefWidth(-1), right.prefHeight(-1));
             rRect = hRect.placeRight(rRect, margin);
         }
-        
+                
         return lRect.include(hRect).include(rRect);
     }
     

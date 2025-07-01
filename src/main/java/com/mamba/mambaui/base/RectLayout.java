@@ -53,6 +53,17 @@ public sealed interface RectLayout {
             this(0, 0, maxx, maxy);
         }
         
+        public boolean isEmpty() {
+            return this.minx == Double.POSITIVE_INFINITY
+                && this.miny == Double.POSITIVE_INFINITY
+                && this.maxx == Double.NEGATIVE_INFINITY
+                && this.maxy == Double.NEGATIVE_INFINITY;
+        }
+        
+        public boolean isNotEmpty(){
+            return !isEmpty();
+        }
+        
         @Override
         public double width(){
             return maxx - minx;
@@ -92,6 +103,7 @@ public sealed interface RectLayout {
         
         // bounding box
         public Rect include(double x, double y) {
+            if (Double.isNaN(x) || Double.isNaN(y)) return this;
             return new Rect(min(minx(), x),
                             min(miny(), y),            
                             max(maxx(), x),
@@ -100,8 +112,14 @@ public sealed interface RectLayout {
        
         // bounding box
         public Rect include(Rect rect){
-            return include(rect.minx, rect.miny).
-                   include(rect.maxx, rect.maxy);
+            if (rect.isEmpty()) return this;
+            if (this.isEmpty()) return rect;
+            return new Rect(
+                Math.min(this.minx, rect.minx),
+                Math.min(this.miny, rect.miny),
+                Math.max(this.maxx, rect.maxx),
+                Math.max(this.maxy, rect.maxy)
+            );
         }
                
         public RectPair cut(RectCutSide side, double amount) {
@@ -115,6 +133,9 @@ public sealed interface RectLayout {
         }
         
         public RectPair cutLeft(double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot cut to an uninitialized Rect.");
+            
             double cutmaxx = Math.min(this.maxx, this.minx + amount);
             Rect cut = new Rect(this.minx, this.miny, cutmaxx, this.maxy);
             Rect remaining = new Rect(cutmaxx, this.miny, this.maxx, this.maxy);
@@ -122,6 +143,9 @@ public sealed interface RectLayout {
         }
 
         public RectPair cutRight(double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot cut to an uninitialized Rect.");
+            
             double cutminx = Math.max(this.minx, this.maxx - amount);
             Rect cut = new Rect(cutminx, this.miny, this.maxx, this.maxy);
             Rect remaining = new Rect(this.minx, this.miny, cutminx, this.maxy);
@@ -129,6 +153,9 @@ public sealed interface RectLayout {
         }
 
         public RectPair cutTop(double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot cut to an uninitialized Rect.");
+            
             double cutmaxy = Math.min(this.maxy, this.miny + amount);            
             Rect cut = new Rect(this.minx, this.miny, this.maxx, cutmaxy);
             Rect remaining = new Rect(this.minx, cutmaxy, this.maxx, this.maxy);
@@ -136,6 +163,9 @@ public sealed interface RectLayout {
         }
 
         public RectPair cutBottom(double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot cut to an uninitialized Rect.");
+            
             double cutminy = Math.max(this.miny, this.maxy - amount);
             Rect cut = new Rect(this.minx, cutminy, this.maxx, this.maxy);
             Rect remaining = new Rect(this.minx, this.miny, this.maxx, cutminy);
@@ -153,21 +183,33 @@ public sealed interface RectLayout {
         }
         
         public Rect extendLeft(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot extend to an uninitialized Rect.");
+            
             double newCutMinX = minx - amount;
             return new Rect(newCutMinX, miny, maxx, maxy);
         }
         
         public Rect extendRight(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot extend to an uninitialized Rect.");
+            
             double newCutMaxX = maxx + amount;
             return new Rect(minx, miny, newCutMaxX, maxy);
         }
         
         public Rect extendBottom(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot extend to an uninitialized Rect.");
+            
             double newCutMaxY = maxy + amount;
             return new Rect(minx, miny, maxx, newCutMaxY);
         }
         
         public Rect extendTop(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot extend to an uninitialized Rect.");
+            
             double newCutMinY = miny - amount;
             return new Rect(minx, newCutMinY, maxx, maxy);
         }
@@ -183,6 +225,9 @@ public sealed interface RectLayout {
         }
         
         public Rect contractLeft(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot contract to an uninitialized Rect.");
+            
             double newCutMinX = minx + amount;
             if(maxx - newCutMinX < 0)
                 newCutMinX = maxx;
@@ -190,6 +235,9 @@ public sealed interface RectLayout {
         }
                 
         public Rect contractRight(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot contract to an uninitialized Rect.");
+            
             double newCutMaxX = maxx - amount;
             if(newCutMaxX - minx < 0)
                 newCutMaxX = minx;
@@ -197,6 +245,9 @@ public sealed interface RectLayout {
         }
         
         public Rect contractBottom(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot contract to an uninitialized Rect.");
+            
             double newCutMaxY = maxy - amount;
             if(newCutMaxY - miny < 0)
                 newCutMaxY = miny;
@@ -204,6 +255,9 @@ public sealed interface RectLayout {
         }
         
         public Rect contractTop(double amount){
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot contract to an uninitialized Rect.");
+            
             double newCutMinY = miny + amount;
             if(maxy - newCutMinY < 0)
                 newCutMinY = maxy;
@@ -211,6 +265,9 @@ public sealed interface RectLayout {
         }
         
         public Rect placeLeft(Rect rect, double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+            
             double minX = this.minx - rect.width() - amount;            
             double minY = miny;
             double maxX = minX + rect.width();
@@ -219,6 +276,9 @@ public sealed interface RectLayout {
         }
         
         public Rect placeRight(Rect rect, double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+            
             double width = rect.width();
             double minX = maxx + amount;
             double minY = miny;
@@ -228,6 +288,9 @@ public sealed interface RectLayout {
         }
 
         public Rect placeTop(Rect rect, double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+            
             double minX = minx;
             double minY = miny - rect.height() - amount;
             double maxX = minX + rect.width();
@@ -236,6 +299,9 @@ public sealed interface RectLayout {
         }
         
         public Rect placeBottom(Rect rect, double amount) {
+            if (this.isEmpty())
+                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+            
             double minX = minx;
             double minY = maxy + amount;
             double maxX = minX + rect.width();
@@ -295,8 +361,8 @@ public sealed interface RectLayout {
         }       
         
         public RectCut expand(double amount) {
-            if (amount <= 0 || Double.isNaN(amount)) return this;
-
+            if (amount <= 0 || Double.isNaN(amount) || isRoot()) return this;
+            
             RectCut cut = switch (side) {
                 case LEFT -> new RectCut(rect.extendRight(amount), remainingRect.contractLeft(amount),  LEFT); 
                 case RIGHT -> new RectCut(rect.extendLeft(amount), remainingRect.contractRight(amount), RIGHT);
