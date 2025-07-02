@@ -5,6 +5,9 @@
 package com.mamba.mambaui.modal;
 
 import java.util.Optional;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 
 /**
@@ -14,10 +17,27 @@ import javafx.scene.Node;
 public interface ModalDialogBase<T> {
     Optional<T> showAndWait();
     void close();
-    void setHeader(String title);
+    
     void setHeader(String title, String description);
     void setHeader(Node graphic, String title, String description);
-    void setGraphic(Node graphic);
+        
+    String getHeaderTitle();
+    void setHeaderTitle(String value);
+    StringProperty headerTitleProperty();
+    
+    String getHeaderDescription();
+    void setHeaderDescription(String value);
+    StringProperty headerDescriptionProperty();
+    
+    Node getHeaderGraphic();
+    void setHeaderGraphic(Node graphic);
+    ObjectProperty<Node> headerGraphicProperty();
+    
+    
+    boolean getHeaderCloseButtonActive();
+    void setHeaderCloseButtonActive(boolean active);
+    BooleanProperty headerCloseButtonActiveProperty();
+    
     void setCloseButtonActive(boolean active);
     boolean isVisible();
 }

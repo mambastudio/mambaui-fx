@@ -2,7 +2,7 @@
 @import "modal.css";
 
 /* variables.css */
-:root {
+.root {
     /* Circular Button Variables */        
     -circular-hover-bg: rgba(0, 0, 0, 0.05);
     -circular-hover-border: rgba(0, 0, 0, 0.2);

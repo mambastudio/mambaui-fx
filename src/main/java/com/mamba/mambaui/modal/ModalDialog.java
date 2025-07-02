@@ -8,11 +8,16 @@ import com.mamba.mambaui.MambauiTheme;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -25,6 +30,11 @@ import javafx.scene.control.Skin;
 public class ModalDialog<T> extends Control implements ModalDialogBase{
     private static final StyleablePropertyFactory<ModalDialog> FACTORY =
             new StyleablePropertyFactory<>(Control.getClassCssMetaData());
+    
+    private final StringProperty headerTitle = new SimpleStringProperty();
+    private final StringProperty headerDescription = new SimpleStringProperty();
+    private final ObjectProperty<Node> headerGraphic = new SimpleObjectProperty();
+    private final BooleanProperty headerCloseButtonActive = new SimpleBooleanProperty();
     
     private final ObjectProperty<Node> content = new SimpleObjectProperty<>();
    // private Optional<ModalContent<T>> modalContent = Optional.empty();    
@@ -55,6 +65,8 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
                 });
             }
         });
+        
+        
     }
     
     @Override protected Skin<?> createDefaultSkin() {return new ModalDialogSkin(this);}
@@ -126,29 +138,50 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
         hide();
         safeExitLoop();
     }
-
-    @Override
-    public void setHeader(String title) {
-        getModalSkin().setHeader(title);
-    }
-
+    
     @Override
     public void setHeader(String title, String description) {
-        getModalSkin().setHeader(title, description);
+        setHeaderTitle(title);
+        setHeaderDescription(description);
     }
 
     @Override
     public void setHeader(Node graphic, String title, String description) {
-        getModalSkin().setHeader(graphic, title, description);
+        setHeaderTitle(title);
+        setHeaderDescription(description);
+        setHeaderGraphic(graphic);
     }
 
     @Override
     public void setCloseButtonActive(boolean active) {
-        getModalSkin().setCloseButtonActive(active);
+        setHeaderCloseButtonActive(active);
     }
-
+    
     @Override
-    public void setGraphic(Node graphic) {
-        getModalSkin().setGraphic(graphic);
-    }
+    public final String getHeaderTitle() { return headerTitle.get(); }
+    @Override
+    public final void setHeaderTitle(String value) { headerTitle.set(value); }
+    @Override
+    public final StringProperty headerTitleProperty() { return headerTitle; }
+    
+    @Override
+    public final String getHeaderDescription() { return headerDescription.get(); }
+    @Override
+    public final void setHeaderDescription(String value) { headerDescription.set(value); }
+    @Override
+    public final StringProperty headerDescriptionProperty() { return headerDescription; }
+    
+    @Override
+    public final Node getHeaderGraphic() { return headerGraphic.get(); }
+    @Override
+    public final void setHeaderGraphic(Node graphic) { headerGraphic.set(graphic); }
+    @Override
+    public final ObjectProperty<Node> headerGraphicProperty() { return headerGraphic; }
+    
+    @Override
+    public final boolean getHeaderCloseButtonActive() { return headerCloseButtonActive.get(); }
+    @Override
+    public final void setHeaderCloseButtonActive(boolean active) { headerCloseButtonActive.set(active); }
+    @Override
+    public final BooleanProperty headerCloseButtonActiveProperty() { return headerCloseButtonActive; }
 }

@@ -6,6 +6,7 @@ package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.MambauiUtility;
 import com.mamba.mambaui.control.Tile;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -21,7 +22,7 @@ import javafx.scene.layout.StackPane;
  *
  * @author user
  */
-public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<ModalDialog> {    
+public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<ModalDialog> {    
     private enum ResizeMode {
         NONE, EAST, WEST, NORTH, SOUTH,
         NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST
@@ -44,6 +45,22 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
     
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
+        
+        setHeader(dialog.getHeaderGraphic(), dialog.getHeaderTitle(), dialog.getHeaderDescription());
+        setCloseButtonActive(dialog.getHeaderCloseButtonActive());
+
+        dialog.headerTitleProperty().addListener((obs, oldVal, newVal) -> {
+            setHeaderTitle(newVal);
+        });
+        dialog.headerDescriptionProperty().addListener((obs, oldVal, newVal) -> {
+            setHeaderDescription(newVal);
+        });
+        dialog.headerGraphicProperty().addListener((obs, oldVal, newVal) -> {
+            setHeaderGraphic((Node) newVal);
+        });        
+        dialog.headerCloseButtonActiveProperty().addListener((obs, oldVal, newVal) ->{
+            setCloseButtonActive(newVal);
+        });
             
         root = new StackPane();
         initGraphics();        
@@ -71,6 +88,10 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
                 parent.heightProperty().addListener((o, ov, nv) -> dialogPane.requestLayout());
             }
         });
+        
+        closeBtn.setOnMouseEntered(e-> closeBtn.setCursor(Cursor.DEFAULT));
+       
+        header.setPadding(new Insets(5));
     }
     
     protected BorderPane getBorderPane(){
@@ -211,13 +232,16 @@ public class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin<Modal
         return new Point2D(px, py);
     }   
         
-    public void setHeader(String title) {
+    public void setHeaderTitle(String title) {
         header.setHeader(title);
     }
 
-    public void setHeader(String title, String description) {
-        header.setHeader(title);
+    public void setHeaderDescription(String description) {        
         header.setDescription(description);
+    }
+    
+    public void setHeaderGraphic(Node graphic) {        
+        header.setLeft(graphic);
     }
 
     public void setHeader(Node graphic, String title, String description) {
