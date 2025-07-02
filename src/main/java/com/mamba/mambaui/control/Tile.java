@@ -279,8 +279,7 @@ public class Tile extends Region{
             if(hRect.height()< 10)
                 hRect = new Rect(hRect.width(), 10);
             
-            if(lRect.isNotEmpty())
-                hRect = lRect.placeRight(hRect, margin);            
+            hRect = lRect.placeRight(hRect, margin);            
         }
                 
         if(right != null){

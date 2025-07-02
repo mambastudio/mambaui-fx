@@ -38,7 +38,7 @@ public sealed interface RectLayout {
     public record Rect(double minx, double miny, double maxx, double maxy) implements RectLayout{
         
         public Rect{
-            if (minx == Double.POSITIVE_INFINITY && miny == Double.POSITIVE_INFINITY && maxx == Double.NEGATIVE_INFINITY && maxy == Double.NEGATIVE_INFINITY) { //even if we translate, it still remains same
+            if (isEmpty()) { //even if we translate, it still remains same
                 // Do nothing, keep the infinities as is
             } 
             else if(width() < 0 || height() < 0)
@@ -58,10 +58,6 @@ public sealed interface RectLayout {
                 && this.miny == Double.POSITIVE_INFINITY
                 && this.maxx == Double.NEGATIVE_INFINITY
                 && this.maxy == Double.NEGATIVE_INFINITY;
-        }
-        
-        public boolean isNotEmpty(){
-            return !isEmpty();
         }
         
         @Override
@@ -266,7 +262,7 @@ public sealed interface RectLayout {
         
         public Rect placeLeft(Rect rect, double amount) {
             if (this.isEmpty())
-                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+                return rect;
             
             double minX = this.minx - rect.width() - amount;            
             double minY = miny;
@@ -277,7 +273,7 @@ public sealed interface RectLayout {
         
         public Rect placeRight(Rect rect, double amount) {
             if (this.isEmpty())
-                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+                return rect;
             
             double width = rect.width();
             double minX = maxx + amount;
@@ -289,7 +285,7 @@ public sealed interface RectLayout {
 
         public Rect placeTop(Rect rect, double amount) {
             if (this.isEmpty())
-                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+                return rect;
             
             double minX = minx;
             double minY = miny - rect.height() - amount;
@@ -300,7 +296,7 @@ public sealed interface RectLayout {
         
         public Rect placeBottom(Rect rect, double amount) {
             if (this.isEmpty())
-                throw new IllegalStateException("Cannot place relative to an uninitialized Rect.");
+                return rect;
             
             double minX = minx;
             double minY = maxy + amount;
