@@ -91,7 +91,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         
         closeBtn.setOnMouseEntered(e-> closeBtn.setCursor(Cursor.DEFAULT));
        
-        header.setPadding(new Insets(5));
+        header.setPadding(new Insets(5));        
+        header.getStyleClass().add("tile");
     }
     
     protected BorderPane getBorderPane(){

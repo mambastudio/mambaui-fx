@@ -1,0 +1,32 @@
+.circular-button {
+    -fx-background-radius: 100%;
+    -fx-border-radius: 100%;
+    -fx-min-width: 15px;
+    -fx-min-height: 15px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+
+    /* Base state: clean and invisible */
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
+    /* Remove focus ring */
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;    
+}
+
+.circular-button:hover {
+    -fx-background-color: -circular-hover-bg; /* light hover background */
+    -fx-border-color: -circular-hover-border;      /* visible border */
+    -fx-border-radius: 100%;
+    -fx-background-radius: 100%;
+}
+
+.circular-button:pressed {
+    -fx-background-color: -circular-pressed-bg;    
+}
+
+.circular-button .close-icon {
+    -fx-icon-size: -circular-close-icon-size;
+    -fx-fill: -circular-close-icon-fill;
+}

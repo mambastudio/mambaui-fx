@@ -22,13 +22,11 @@ public class ModalApplication extends Application{
     public void start(Stage stage) throws Exception {
         
         ModalDialog dialog = new ModalDialog();        
-        dialog.setHeader("JOSTO", LoremIpsum.getLine());
+        dialog.setHeader("Demo Dialog", LoremIpsum.getLine());
         dialog.setCloseButtonActive(true);
         
-        Scene scene = new Scene(new StackPane(dialog), 1000, 1000);
-        
-        MambauiTheme.applyTo(scene);
-        
+        Scene scene = new Scene(new StackPane(dialog), 1000, 700);
+                
         stage.setTitle("Close Button Viewer");
         stage.setScene(scene);
         stage.show();

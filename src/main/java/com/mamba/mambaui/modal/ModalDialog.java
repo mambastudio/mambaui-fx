@@ -4,7 +4,6 @@
  */
 package com.mamba.mambaui.modal;
 
-import com.mamba.mambaui.MambauiTheme;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
@@ -17,7 +16,6 @@ import javafx.beans.property.StringProperty;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -75,10 +73,9 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
     
     protected ModalDialogSkin getModalSkin(){return (ModalDialogSkin)getSkin();}
     
-    // Optional if using custom stylesheet
     @Override
     public String getUserAgentStylesheet() {
-        return MambauiTheme.SHEET; // shared master file with @import "tile.css"
+        return getClass().getResource("modal.css").toExternalForm();
     }
         
     public Node getContent() {

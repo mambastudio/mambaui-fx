@@ -1,3 +1,12 @@
+.modal {
+    /* Circular Button Variables */        
+    -circular-hover-bg: rgba(0, 0, 0, 0.05);
+    -circular-hover-border: rgba(0, 0, 0, 0.2);
+    -circular-pressed-bg: rgba(0, 0, 0, 0.1);
+    -circular-close-icon-fill: black;
+    -circular-close-icon-size: 20px;    
+}
+
 .modal .pane{
     -fx-background-color: -fx-background;
     -fx-border-color: -fx-box-border;
@@ -5,6 +14,15 @@
     -fx-border-radius: 5;
     -fx-background-radius: 10;
     /*-fx-effect: dropshadow(gaussian, derive(-fx-box-border, 5%), 12, 0.5, 1, 1);*/
+}
+
+.modal .tile .header {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px; /* or whatever size you prefer */    
+}
+
+.modal .tile .description {    
+    -fx-text-fill: rgba(0, 0, 0, 0.8); /* black, but 80% opacity */
 }
 
 .modal .tile .circular-button {

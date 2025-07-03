@@ -86,6 +86,7 @@ public class Tile extends Region{
 
     public final void setHeader(String string) {
         Label label = new Label(string);
+        label.getStyleClass().add("header");
         updateSlot(this.header, label);
         this.header = label;
     }
@@ -93,6 +94,7 @@ public class Tile extends Region{
     public final void setDescription(String string) {
         Label label = new Label(string);
         label.setWrapText(true);
+        label.getStyleClass().add("description");
         updateSlot(this.description, label);
         this.description = label;
         this.description.setAlignment(Pos.TOP_LEFT);
@@ -293,8 +295,4 @@ public class Tile extends Region{
         return getInsets().getTop() + getInsets().getBottom();
     }
     
-    @Override
-    public String getUserAgentStylesheet() {
-        return MambauiTheme.SHEET; // shared master file with @import "tile.css"
-    }
 }
