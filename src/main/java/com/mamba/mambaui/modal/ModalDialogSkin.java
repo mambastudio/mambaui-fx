@@ -81,6 +81,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         dialogPane.setOnMousePressed(this::handleMousePressed);
         dialogPane.setOnMouseDragged(this::handleMouseDragged);
         
+       // root.setOnMouseDragged(e-> System.out.println(e.getX()+ " " +e.getY()));
+        
         //Re-center automatically when parent resizes
         dialogPane.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent instanceof Pane parent) {
@@ -90,6 +92,9 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         });
         
         closeBtn.setOnMouseEntered(e-> closeBtn.setCursor(Cursor.DEFAULT));
+        closeBtn.setOnAction(e->{
+             ((ModalDialog<?>) getSkinnable()).close();
+        });
        
         header.setPadding(new Insets(5));        
         header.getStyleClass().add("tile");
@@ -134,7 +139,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
        
     }
     
-    private void handleMouseDragged(MouseEvent e) {   
+    private void handleMouseDragged(MouseEvent e) { 
+        System.out.println(e.getX()+ " " +e.getY());
         if (currentResize == ResizeMode.NONE) return;
 
         Point2D p = point(e);
@@ -192,6 +198,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
             dialogPane.setMaxHeight(newHeight);
             pressHeight = newHeight; // update reference point
         }
+        
+        
 
         dialogPane.requestLayout();
     }

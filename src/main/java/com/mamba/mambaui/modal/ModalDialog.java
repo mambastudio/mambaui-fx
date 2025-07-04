@@ -40,6 +40,8 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
     
     private boolean exited = true;
     
+    private static final double VIEW_ORDER_ON_TOP = -1000;
+    private static final double VIEW_ORDER_HIDDEN = 1000;
     
         
     public ModalDialog(){        
@@ -93,15 +95,19 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
     
     private void show(){
         this.setOpacity(1);
-        this.setViewOrder(-1000);
+        this.setViewOrder(VIEW_ORDER_ON_TOP);
         this.setDisable(false);
+        this.toFront();
         
+        this.applyCss();
+    this.layout();
     }
     
     private void hide(){
         this.setOpacity(0);
-        this.setViewOrder(1000);
+        this.setViewOrder(VIEW_ORDER_HIDDEN);
         this.setDisable(true);
+        this.toBack();
     }
     
     private void safeExitLoop() {
@@ -111,21 +117,26 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
         }
     }
     
+    
+    
     @Override
     public Optional<T> showAndWait() {
         exited = false;
         // Bring ModalLayer to the top and make it visible
         // Add in platform run later to ensure it doesn't glitch during first attempt in resizing.
-        Platform.runLater(()->{
-            show();        
+        //Platform.runLater(()->{
+            show();    
+       //  });   
+            
             // Enter nested event loop to wait for close()  
-            Platform.enterNestedEventLoop(this);           
-        });
-       
+           Platform.enterNestedEventLoop(this);
+            
+               
         // After closing, build the result
         return result;      
     }
     
+    @Override
     public void close() {
        // if (modalContent.isPresent()) {
        //     this.result = modalContent.get().buildResult();

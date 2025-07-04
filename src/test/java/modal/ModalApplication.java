@@ -5,11 +5,10 @@
 package modal;
 
 import com.mamba.mambaui.LoremIpsum;
-import com.mamba.mambaui.MambauiTheme;
 import com.mamba.mambaui.modal.ModalDialog;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -23,16 +22,22 @@ public class ModalApplication extends Application{
         
         ModalDialog dialog = new ModalDialog();        
         dialog.setHeader("Demo Dialog", LoremIpsum.getLine());
-        dialog.setCloseButtonActive(true);
+        dialog.setCloseButtonActive(true);  
         
-        Scene scene = new Scene(new StackPane(dialog), 1000, 700);
+        Button btn = new Button("Open");
+        btn.setOnAction(e-> {
+            dialog.showAndWait();
+             System.out.println("adfas1");
+                });
+        
+        Scene scene = new Scene(new StackPane(dialog, btn), 1000, 700);
                 
         stage.setTitle("Close Button Viewer");
         stage.setScene(scene);
-        stage.show();
+        stage.show(); 
         
         
-        dialog.showAndWait();
+        
         
         
     }
