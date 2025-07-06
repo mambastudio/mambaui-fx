@@ -5,39 +5,30 @@
 package com.mamba.mambaui.modal;
 
 import java.util.Optional;
-import javafx.beans.property.BooleanProperty;
+import java.util.function.Consumer;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 
 /**
  *
  * @author user
+ * @param <T>
  */
 public interface ModalDialogBase<T> {
-    Optional<T> showAndWait();
+    void showAndWait(Consumer<Optional<T>> callback);
     void close();
-    
-    void setHeader(String title, String description);
-    void setHeader(Node graphic, String title, String description);
         
-    String getHeaderTitle();
-    void setHeaderTitle(String value);
-    StringProperty headerTitleProperty();
+    ObjectProperty<Node> headerProperty();
+    void setHeader(Node content);
+    Node getHeader();
     
-    String getHeaderDescription();
-    void setHeaderDescription(String value);
-    StringProperty headerDescriptionProperty();
+    ObjectProperty<Node> contentProperty();
+    void setContent(Node content);
+    Node getContent();
     
-    Node getHeaderGraphic();
-    void setHeaderGraphic(Node graphic);
-    ObjectProperty<Node> headerGraphicProperty();
+    ObjectProperty<Node> footerProperty();
+    void setFooter(Node content);
+    Node getFooter();
     
-    
-    boolean getHeaderCloseButtonActive();
-    void setHeaderCloseButtonActive(boolean active);
-    BooleanProperty headerCloseButtonActiveProperty();
-    
-    void setCloseButtonActive(boolean active);
     boolean isVisible();
 }

@@ -4,9 +4,11 @@
  */
 package modal;
 
-import com.mamba.mambaui.LoremIpsum;
-import com.mamba.mambaui.modal.ModalDialog;
+import com.mamba.mambaui.modal.ModalDialogs;
+import java.io.IO;
+import java.util.Optional;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -20,25 +22,27 @@ public class ModalApplication extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         
-        ModalDialog dialog = new ModalDialog();        
-        dialog.setHeader("Demo Dialog", LoremIpsum.getLine());
-        dialog.setCloseButtonActive(true);  
+        var dialog = ModalDialogs.confirm("Are you sure you want to proceed?");
         
         Button btn = new Button("Open");
         btn.setOnAction(e-> {
-            dialog.showAndWait();
-             System.out.println("adfas1");
+               
+                dialog.showAndWait(option ->{
+                    switch(option.isPresent()){
+                        case true -> IO.println(option.get());
+                        case false -> IO.println("cancelled");
+                    }
                 });
+                    
+            IO.println("asfasdf");
+            
+        });
         
         Scene scene = new Scene(new StackPane(dialog, btn), 1000, 700);
                 
         stage.setTitle("Close Button Viewer");
         stage.setScene(scene);
         stage.show(); 
-        
-        
-        
-        
-        
     }
+    
 }

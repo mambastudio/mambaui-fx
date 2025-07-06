@@ -4,15 +4,19 @@
  */
 package com.mamba.mambaui.modal;
 
+import java.io.IO;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
@@ -25,17 +29,17 @@ import javafx.scene.control.Skin;
  * @author user
  * @param <T>
  */
-public class ModalDialog<T> extends Control implements ModalDialogBase{
+public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     private static final StyleablePropertyFactory<ModalDialog> FACTORY =
             new StyleablePropertyFactory<>(Control.getClassCssMetaData());
     
-    private final StringProperty headerTitle = new SimpleStringProperty();
-    private final StringProperty headerDescription = new SimpleStringProperty();
-    private final ObjectProperty<Node> headerGraphic = new SimpleObjectProperty();
-    private final BooleanProperty headerCloseButtonActive = new SimpleBooleanProperty();
+    private final ObjectProperty<Node> headerProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Node> contentProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Node> footerProperty = new SimpleObjectProperty<>();
     
-    private final ObjectProperty<Node> content = new SimpleObjectProperty<>();
-   // private Optional<ModalContent<T>> modalContent = Optional.empty();    
+    private final DoubleProperty widthDialogProperty = new SimpleDoubleProperty();
+    private final DoubleProperty heightDialogProperty = new SimpleDoubleProperty();
+            
     private Optional<T> result = Optional.empty();
     
     private boolean exited = true;
@@ -44,14 +48,42 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
     private static final double VIEW_ORDER_HIDDEN = 1000;
     
         
-    public ModalDialog(){        
+    public ModalDialog(BiConsumer<ModalHandle<T>, ModalDialog<T>> dialogBuilder){        
         getStyleClass().add("modal");  
         hide();
-        
-        content.addListener((o, ov, nv)->{
-            if(nv != null)
-                getModalSkin().getBorderPane().setCenter(nv);
-        });
+                
+        //create handle
+        ModalHandle<T> handle = new ModalHandle<>() {
+            @Override
+            public void submit(T r) {
+                result = Optional.ofNullable(r);
+                close();
+            }
+
+            @Override
+            public void cancel() {
+                result = Optional.empty();
+                close();
+            }
+
+            @Override
+            public void setContent(Node contentNode) {
+                ModalDialog.this.setContent(contentNode);
+            }
+
+            @Override
+            public void setFooter(Node footerNode) {
+                ModalDialog.this.setFooter(footerNode);
+            }
+
+            @Override
+            public void setHeader(Node header) {
+                ModalDialog.this.setHeader(header);
+            }
+        };
+
+        // Defer until after constructor finishes
+        Platform.runLater(() -> dialogBuilder.accept(handle, this));
         
         //add once when modal layer is added to scene graph
         sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -65,8 +97,6 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
                 });
             }
         });
-        
-        
     }
     
     @Override protected Skin<?> createDefaultSkin() {return new ModalDialogSkin(this);}
@@ -77,30 +107,14 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
     
     @Override
     public String getUserAgentStylesheet() {
-        return getClass().getResource("modal.css").toExternalForm();
+        return ModalDialog.class.getResource("modal.css").toExternalForm();
     }
-        
-    public Node getContent() {
-        return content.get();
-    }
-
-    public ObjectProperty<Node> contentProperty() {
-        return content;
-    }    
-
-    // When content (or user action) builds a result
-    public void setResult(T result) {
-        this.result = Optional.ofNullable(result);
-    }
-    
+            
     private void show(){
         this.setOpacity(1);
         this.setViewOrder(VIEW_ORDER_ON_TOP);
         this.setDisable(false);
-        this.toFront();
-        
-        this.applyCss();
-    this.layout();
+        this.toFront();        
     }
     
     private void hide(){
@@ -116,80 +130,66 @@ public class ModalDialog<T> extends Control implements ModalDialogBase{
             Platform.exitNestedEventLoop(this, null);
         }
     }
-    
-    
-    
+      
     @Override
-    public Optional<T> showAndWait() {
-        exited = false;
-        // Bring ModalLayer to the top and make it visible
-        // Add in platform run later to ensure it doesn't glitch during first attempt in resizing.
-        //Platform.runLater(()->{
-            show();    
-       //  });   
-            
-            // Enter nested event loop to wait for close()  
-           Platform.enterNestedEventLoop(this);
-            
-               
-        // After closing, build the result
-        return result;      
+    public void showAndWait(Consumer<Optional<T>> callback) {
+        if(this.getParent() == null)
+            throw new UnsupportedOperationException("Current invoked dialog has no parent");
+        
+        result = Optional.empty();
+        exited = false;        
+        show();
+        Platform.enterNestedEventLoop(this);
+        callback.accept(result);       
     }
     
     @Override
-    public void close() {
-       // if (modalContent.isPresent()) {
-       //     this.result = modalContent.get().buildResult();
-       // }
-        
+    public void close() {       
         // Send ModalLayer far to the back and make it fully transparent
         hide();
         safeExitLoop();
     }
+        
+    @Override
+    public final ObjectProperty<Node> headerProperty() {return headerProperty;}
+    @Override
+    public final void setHeader(Node content) {this.headerProperty.set(content);}
+    @Override
+    public final Node getHeader() {return headerProperty.get();}
     
     @Override
-    public void setHeader(String title, String description) {
-        setHeaderTitle(title);
-        setHeaderDescription(description);
+    public final ObjectProperty<Node> contentProperty() {return contentProperty;}
+    @Override
+    public final void setContent(Node content) {this.contentProperty.set(content);}
+    @Override
+    public final Node getContent() {return contentProperty.get();}
+    
+    @Override
+    public final ObjectProperty<Node> footerProperty() {return footerProperty;}
+    @Override
+    public final void setFooter(Node content) {this.footerProperty.set(content);}
+    @Override
+    public final Node getFooter() {return footerProperty.get();}
+    
+    
+    public final DoubleProperty widthDialogProperty() {return widthDialogProperty;}    
+    public final void setWidthDialog(double width) {this.widthDialogProperty.set(width);}    
+    public final double getWidthDialog() {return widthDialogProperty.get();}
+    
+    public final DoubleProperty heightDialogProperty() {return heightDialogProperty;}    
+    public final void setHeightDialog(double width) {this.heightDialogProperty.set(width);}    
+    public final double getHeightDialog() {return heightDialogProperty.get();}
+    
+    public final void setDialogSize(double width, double height){
+        setWidthDialog(width);
+        setHeightDialog(height);
     }
-
-    @Override
-    public void setHeader(Node graphic, String title, String description) {
-        setHeaderTitle(title);
-        setHeaderDescription(description);
-        setHeaderGraphic(graphic);
+    
+    public interface ModalHandle<T> {
+        void submit(T result);
+        void cancel();
+        void setHeader(Node header);
+        void setContent(Node content);
+        void setFooter(Node footer);
     }
-
-    @Override
-    public void setCloseButtonActive(boolean active) {
-        setHeaderCloseButtonActive(active);
-    }
-    
-    @Override
-    public final String getHeaderTitle() { return headerTitle.get(); }
-    @Override
-    public final void setHeaderTitle(String value) { headerTitle.set(value); }
-    @Override
-    public final StringProperty headerTitleProperty() { return headerTitle; }
-    
-    @Override
-    public final String getHeaderDescription() { return headerDescription.get(); }
-    @Override
-    public final void setHeaderDescription(String value) { headerDescription.set(value); }
-    @Override
-    public final StringProperty headerDescriptionProperty() { return headerDescription; }
-    
-    @Override
-    public final Node getHeaderGraphic() { return headerGraphic.get(); }
-    @Override
-    public final void setHeaderGraphic(Node graphic) { headerGraphic.set(graphic); }
-    @Override
-    public final ObjectProperty<Node> headerGraphicProperty() { return headerGraphic; }
-    
-    @Override
-    public final boolean getHeaderCloseButtonActive() { return headerCloseButtonActive.get(); }
-    @Override
-    public final void setHeaderCloseButtonActive(boolean active) { headerCloseButtonActive.set(active); }
-    @Override
-    public final BooleanProperty headerCloseButtonActiveProperty() { return headerCloseButtonActive; }
 }

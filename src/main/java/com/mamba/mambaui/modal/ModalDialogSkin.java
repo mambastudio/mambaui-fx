@@ -6,7 +6,7 @@ package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.MambauiUtility;
 import com.mamba.mambaui.control.Tile;
-import java.io.IO;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -29,11 +29,13 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST
     }
     
-    private static final int RESIZE_MARGIN = 8;
+    private static final int RESIZE_MARGIN = 4;
     private ResizeMode currentResize = ResizeMode.NONE;
         
     private double pressCenterX = 0;
     private double pressCenterY = 0;
+    
+    private double edgeOffsetX, edgeOffsetY;
         
     protected final StackPane root;
     protected final BorderPane dialogPane = new BorderPane();
@@ -42,38 +44,40 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
     
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
-        
-        setHeader(dialog.getHeaderGraphic(), dialog.getHeaderTitle(), dialog.getHeaderDescription());
-        setCloseButtonActive(dialog.getHeaderCloseButtonActive());
+                
+        dialogPane.setTop(dialog.getHeader());
+        dialogPane.setCenter(dialog.getContent());
+        dialogPane.setBottom(dialog.getFooter());
+        setDialogSize(dialog.getWidthDialog(), dialog.getHeightDialog());
 
-        dialog.headerTitleProperty().addListener((obs, oldVal, newVal) -> {
-            setHeaderTitle(newVal);
+        dialog.headerProperty().addListener((_, _, newVal)->{
+            dialogPane.setTop((Node) newVal);
         });
-        dialog.headerDescriptionProperty().addListener((obs, oldVal, newVal) -> {
-            setHeaderDescription(newVal);
+        dialog.contentProperty().addListener((_, _, newVal)->{
+            dialogPane.setCenter((Node) newVal);
         });
-        dialog.headerGraphicProperty().addListener((obs, oldVal, newVal) -> {
-            setHeaderGraphic((Node) newVal);
-        });        
-        dialog.headerCloseButtonActiveProperty().addListener((obs, oldVal, newVal) ->{
-            setCloseButtonActive(newVal);
+        dialog.footerProperty().addListener((_, _, newVal)->{
+            dialogPane.setBottom((Node) newVal);
+        });
+        dialog.widthDialogProperty().addListener((_, _, newVal)->{
+            setDialogWidth((double) newVal);
+        });
+        dialog.heightDialogProperty().addListener((_, _, newVal)->{
+            setDialogHeight((double) newVal);
         });
             
-        root = new StackPane();
+        root = new StackPane();        
         initGraphics();        
     }
     
     private void initGraphics(){
         this.dialogPane.getStyleClass().add("pane"); 
         header.setPrefHeight(90);
-        dialogPane.setTop(header);
+       // dialogPane.setTop(header);
         
         root.getChildren().add(dialogPane); //add pane first to root stack
         getChildren().add(root); //add root to skin
-        
-        dialogPane.setMaxSize(300, 300);
-        dialogPane.setPrefSize(300, 300);
-        
+                
         root.setOnMouseMoved(this::handleMouseMoved);
         root.setOnMousePressed(this::handleMousePressed);
         root.setOnMouseDragged(this::handleMouseDragged);
@@ -93,6 +97,22 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
        
         header.setPadding(new Insets(5));        
         header.getStyleClass().add("tile");
+        
+        this.dialogPane.setPadding(new Insets(5));
+        
+        //Add capture (parent -> child) detection and apply default cursor
+        dialogPane.addEventFilter(MouseEvent.MOUSE_MOVED, e -> {
+            Node target = (Node) e.getTarget();
+
+            if (isInteractiveControl(target)) {
+                dialogPane.setCursor(null);
+            } 
+        });
+        
+        Platform.runLater(() -> {
+            // Now the node is attached to scene graph and can receive focus
+            root.requestFocus();
+        });
     }
     
     protected BorderPane getBorderPane(){
@@ -105,22 +125,23 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
     }
     
     private void handleMouseMoved(MouseEvent e) {    
+        
         if(!e.isPrimaryButtonDown()){
-            Point2D p = dialogPane.sceneToLocal(e.getSceneX(), e.getSceneY()); 
-            System.out.println(p);
+            Point2D p = dialogPane.sceneToLocal(e.getSceneX(), e.getSceneY());             
             currentResize = getResizeMode(p.getX(), p.getY(), dialogPane.getWidth(), dialogPane.getHeight());   
             dialogPane.setCursor(cursorForResizeMode(currentResize));
         }
     }
     
-    private void handleMousePressed(MouseEvent e) {
+    private void handleMousePressed(MouseEvent e) {        
         if (currentResize != ResizeMode.NONE) {
-            e.consume();            
+            e.consume();  
+            
+            Point2D p = dialogPane.sceneToLocal(e.getSceneX(), e.getSceneY());     
            
             pressCenterX = root.getWidth()/2;//dialogPane.getLayoutX() + pressWidth / 2;
             pressCenterY = root.getHeight()/2;//dialogPane.getLayoutY() + pressHeight / 2;
-            
-            /*
+                       
             edgeOffsetX = switch (currentResize) {
                 case EAST, NORTH_EAST, SOUTH_EAST -> dialogPane.getWidth() - p.getX();
                 case WEST, NORTH_WEST, SOUTH_WEST -> p.getX();
@@ -131,22 +152,33 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
                 case SOUTH, SOUTH_EAST, SOUTH_WEST -> dialogPane.getHeight() - p.getY();
                 case NORTH, NORTH_EAST, NORTH_WEST -> p.getY();
                 default -> 0;
-            };
-            */
+            };            
         }
        
     }
     
-    private void handleMouseDragged(MouseEvent e) {    
-        IO.println(currentResize);
+    private void handleMouseDragged(MouseEvent e) {  
         if (currentResize == ResizeMode.NONE) return;
 
         double px = e.getX();
         double py = e.getY();
         
-        dialogPane.setMaxWidth(Math.abs(pressCenterX - px) * 2);
-        dialogPane.setMaxHeight(Math.abs(pressCenterY - py) * 2);
+        boolean widthChanged = false;
+        boolean heightChanged = false;
         
+        switch(currentResize){
+            case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST ->{
+                widthChanged = true;
+                heightChanged = true;
+            } 
+            case EAST, WEST -> widthChanged = true;
+            case NORTH, SOUTH -> heightChanged = true;
+        }
+        
+        if(widthChanged)
+            dialogPane.setMaxWidth(Math.abs(pressCenterX - px) * 2 + edgeOffsetX);
+        if(heightChanged)
+            dialogPane.setMaxHeight(Math.abs(pressCenterY - py) * 2 + edgeOffsetY);        
 
         dialogPane.requestLayout();
     }
@@ -209,5 +241,30 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
             case true -> header.setRight(closeBtn);
             case false -> header.setRight(null);
         }
+    }
+    
+    private boolean isInteractiveControl(Node node) {
+        while (node != null) {
+            if (node instanceof javafx.scene.control.Control control && control.isFocusTraversable()) {
+                return true;
+            }
+            node = node.getParent(); // walk up in case wrapped in layout
+        }
+        return false;
+    }
+    
+    protected void setDialogSize(double width, double height){
+        dialogPane.setMaxSize(width, height);
+        dialogPane.setPrefSize(width, height);
+    }
+    
+    protected void setDialogWidth(double width){
+        dialogPane.setMaxWidth(width);
+        dialogPane.setPrefWidth(width);
+    }
+    
+    protected void setDialogHeight(double height){
+        dialogPane.setMaxHeight(height);
+        dialogPane.setPrefHeight(height);
     }
 }
