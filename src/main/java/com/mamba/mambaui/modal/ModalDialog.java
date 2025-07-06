@@ -13,8 +13,10 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
@@ -39,6 +41,8 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     
     private final DoubleProperty widthDialogProperty = new SimpleDoubleProperty();
     private final DoubleProperty heightDialogProperty = new SimpleDoubleProperty();
+    
+    private final BooleanProperty triggerDialogProperty = new SimpleBooleanProperty(false);
             
     private Optional<T> result = Optional.empty();
     
@@ -137,8 +141,9 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
             throw new UnsupportedOperationException("Current invoked dialog has no parent");
         
         result = Optional.empty();
-        exited = false;        
+        exited = false;    
         show();
+        triggerDialogProperty.set(!triggerDialogProperty.get());
         Platform.enterNestedEventLoop(this);
         callback.accept(result);       
     }
@@ -179,6 +184,8 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     public final DoubleProperty heightDialogProperty() {return heightDialogProperty;}    
     public final void setHeightDialog(double width) {this.heightDialogProperty.set(width);}    
     public final double getHeightDialog() {return heightDialogProperty.get();}
+    
+    public final BooleanProperty triggerDialogProperty() {return triggerDialogProperty;}    
     
     public final void setDialogSize(double width, double height){
         setWidthDialog(width);

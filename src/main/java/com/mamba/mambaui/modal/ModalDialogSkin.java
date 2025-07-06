@@ -6,6 +6,8 @@ package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.MambauiUtility;
 import com.mamba.mambaui.control.Tile;
+import java.io.IO;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -14,10 +16,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Skin;
 import javafx.scene.control.SkinBase;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 /**
  *
@@ -49,6 +53,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         dialogPane.setCenter(dialog.getContent());
         dialogPane.setBottom(dialog.getFooter());
         setDialogSize(dialog.getWidthDialog(), dialog.getHeightDialog());
+        
+        root = new StackPane();  
 
         dialog.headerProperty().addListener((_, _, newVal)->{
             dialogPane.setTop((Node) newVal);
@@ -65,8 +71,24 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         dialog.heightDialogProperty().addListener((_, _, newVal)->{
             setDialogHeight((double) newVal);
         });
+        dialog.triggerDialogProperty().addListener(o->{
+            MouseEvent clickEvent = new MouseEvent(
+                MouseEvent.MOUSE_CLICKED,
+                0, 0, 0, 0,
+                MouseButton.PRIMARY,
+                1,
+                false, false, false, false,
+                true, false, false,
+                true, false, false,
+                null
+            );
             
-        root = new StackPane();        
+            
+            dialogPane.applyCss();
+            dialogPane.layout();
+        });
+            
+              
         initGraphics();        
     }
     
