@@ -15,7 +15,7 @@ import javafx.scene.Node;
  * @param <T>
  */
 public interface ModalDialogBase<T> {
-    void showAndWait(Consumer<Optional<T>> callback);
+    Optional<T> showAndWait();
     void close();
         
     ObjectProperty<Node> headerProperty();

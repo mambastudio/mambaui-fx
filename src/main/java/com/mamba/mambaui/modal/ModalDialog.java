@@ -4,14 +4,9 @@
  */
 package com.mamba.mambaui.modal;
 
-import java.io.IO;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -51,7 +46,6 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     private static final double VIEW_ORDER_ON_TOP = -1000;
     private static final double VIEW_ORDER_HIDDEN = 1000;
     
-        
     public ModalDialog(BiConsumer<ModalHandle<T>, ModalDialog<T>> dialogBuilder){        
         getStyleClass().add("modal");  
         hide();
@@ -115,10 +109,11 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     }
             
     private void show(){
-        this.setOpacity(1);
+        
         this.setViewOrder(VIEW_ORDER_ON_TOP);
         this.setDisable(false);
-        this.toFront();        
+        this.toFront(); 
+        this.setOpacity(1);
     }
     
     private void hide(){
@@ -131,21 +126,20 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     private void safeExitLoop() {
         if (!exited) {
             exited = true;
-            Platform.exitNestedEventLoop(this, null);
+            Platform.exitNestedEventLoop(this, result);
         }
     }
       
     @Override
-    public void showAndWait(Consumer<Optional<T>> callback) {
+    public Optional<T> showAndWait() {
         if(this.getParent() == null)
             throw new UnsupportedOperationException("Current invoked dialog has no parent");
         
         result = Optional.empty();
-        exited = false;    
-        show();
-        triggerDialogProperty.set(!triggerDialogProperty.get());
-        Platform.enterNestedEventLoop(this);
-        callback.accept(result);       
+        exited = false; 
+        
+        show();        
+        return (Optional<T>) Platform.enterNestedEventLoop(this); 
     }
     
     @Override

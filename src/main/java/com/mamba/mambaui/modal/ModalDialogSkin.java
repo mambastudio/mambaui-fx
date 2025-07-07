@@ -72,20 +72,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
             setDialogHeight((double) newVal);
         });
         dialog.triggerDialogProperty().addListener(o->{
-            MouseEvent clickEvent = new MouseEvent(
-                MouseEvent.MOUSE_CLICKED,
-                0, 0, 0, 0,
-                MouseButton.PRIMARY,
-                1,
-                false, false, false, false,
-                true, false, false,
-                true, false, false,
-                null
-            );
+            root.requestFocus(); //DOES NOT WORK TO DESIRED OUTCOME - THIS SECTION IS TO INVESTIGATE SKIN CALLS FROM CONTROL
             
-            
-            dialogPane.applyCss();
-            dialogPane.layout();
         });
             
               

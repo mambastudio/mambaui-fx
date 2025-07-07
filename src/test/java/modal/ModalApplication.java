@@ -25,17 +25,13 @@ public class ModalApplication extends Application{
         var dialog = ModalDialogs.confirm("Are you sure you want to proceed?");
         
         Button btn = new Button("Open");
-        btn.setOnAction(e-> {
-               
-                dialog.showAndWait(option ->{
-                    switch(option.isPresent()){
-                        case true -> IO.println(option.get());
-                        case false -> IO.println("cancelled");
-                    }
-                });
-                    
-            IO.println("asfasdf");
-            
+        btn.setOnAction(e-> {            
+            var result = dialog.showAndWait();               
+                
+            switch(result.isPresent()){
+                case true -> IO.println(result.get());
+                case false -> IO.println("cancelled");
+            }
         });
         
         Scene scene = new Scene(new StackPane(dialog, btn), 1000, 700);
