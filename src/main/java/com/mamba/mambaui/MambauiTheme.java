@@ -14,7 +14,7 @@ public final class MambauiTheme {
     private MambauiTheme() {}
 
     public static final String SHEET = 
-        MambauiTheme.class.getResource("theme/mambaui.css").toExternalForm();
+        MambauiTheme.class.getResource("theme/mambaui-theme.css").toExternalForm();
 
     public static void applyTo(Scene scene, String... overrides) {
         if (!scene.getStylesheets().contains(SHEET)) {

@@ -35,8 +35,7 @@ public class ModalDialogs {
                 ButtonBar.setButtonData(cancel, ButtonBar.ButtonData.NO);
                 buttonBar.getButtons().addAll(ok, cancel);
 
-                Tile header = new Tile("Confirmation", message);
-                header.getStyleClass().add("tile");
+                Tile header = new Tile("Confirmation", message);                
 
                 FontIcon icon = new FontIcon("mdral-help_outline");
                 icon.setIconSize(60);
