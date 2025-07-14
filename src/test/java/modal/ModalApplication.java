@@ -4,6 +4,7 @@
  */
 package modal;
 
+import com.mamba.mambaui.MambauiTheme;
 import com.mamba.mambaui.modal.ModalDialogs;
 import java.io.IO;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class ModalApplication extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         
-        var dialog = ModalDialogs.confirm("Are you sure you want to proceed?");
+        var dialog = ModalDialogs.information("Are you sure you want to proceed?");
         
         Button btn = new Button("Open");
         btn.setOnAction(e-> {            
@@ -35,6 +36,8 @@ public class ModalApplication extends Application{
         });
         
         Scene scene = new Scene(new StackPane(dialog, btn), 1000, 700);
+        
+        MambauiTheme.applyTo(scene);
                 
         stage.setTitle("Close Button Viewer");
         stage.setScene(scene);

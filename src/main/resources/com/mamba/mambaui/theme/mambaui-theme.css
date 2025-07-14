@@ -1,4 +1,3 @@
-@import "circularbutton_t.css";
 @import "modal_t.css";
 
 /* variables.css */
@@ -9,4 +8,9 @@
     -circular-pressed-bg: rgba(0, 0, 0, 0.1);
     -circular-close-icon-fill: black;
     -circular-close-icon-size: 20px;
+    
+    /**/
+    -modal-pane-background-color: -fx-background;
+    -modal-pane-border-color: -fx-box-border;
+    
 }

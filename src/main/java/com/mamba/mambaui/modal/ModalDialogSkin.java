@@ -49,6 +49,7 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
                 
+        IO.println(dialog.getContent());
         dialogPane.setTop(dialog.getHeader());
         dialogPane.setCenter(dialog.getContent());
         dialogPane.setBottom(dialog.getFooter());

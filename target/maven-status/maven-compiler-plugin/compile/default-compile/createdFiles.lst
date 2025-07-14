@@ -17,4 +17,5 @@ com\mamba\mambaui\base\RectLayout$Rect.class
 com\mamba\mambaui\LoremIpsum.class
 com\mamba\mambaui\modal\ModalDialogSkin$ResizeMode.class
 com\mamba\mambaui\MambauiFx.class
+com\mamba\mambaui\modal\ModalDialogs$InformationDialog.class
 com\mamba\mambaui\control\Tile.class

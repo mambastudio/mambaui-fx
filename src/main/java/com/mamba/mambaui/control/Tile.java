@@ -61,6 +61,12 @@ public class Tile extends Region{
     public Tile(){
         getStyleClass().add("tile");
     }
+    
+    public Tile(String header){
+        getStyleClass().add("tile");
+        setHeader(header);
+    }
+    
     public Tile(String header, String description){
         getStyleClass().add("tile");
         setHeader(header);

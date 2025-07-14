@@ -4,6 +4,7 @@
  */
 package com.mamba.mambaui;
 
+import java.util.Objects;
 import javafx.scene.Scene;
 
 /**
@@ -25,6 +26,18 @@ public final class MambauiTheme {
             if (!scene.getStylesheets().contains(override)) {
                 scene.getStylesheets().add(override);
             }
+        }
+    }
+    
+    public static void applyTo(Class clazz, Scene scene, String baseTheme) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(scene);
+        Objects.requireNonNull(baseTheme);
+        
+        String theme = clazz.getResource(baseTheme).toExternalForm();
+        
+        if (!scene.getStylesheets().contains(theme)) {
+            scene.getStylesheets().add(theme);
         }
     }
 

@@ -4,6 +4,7 @@
  */
 package com.mamba.mambaui.modal;
 
+import java.io.IO;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -65,7 +66,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
             }
 
             @Override
-            public void setContent(Node contentNode) {
+            public void setContent(Node contentNode) {               
                 ModalDialog.this.setContent(contentNode);
             }
 

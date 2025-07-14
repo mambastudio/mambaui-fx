@@ -25,6 +25,10 @@
     -fx-text-fill: rgba(0, 0, 0, 0.8); /* black, but 80% opacity */
 }
 
+.modal .tile .header-help {    
+    -fx-icon-size: 60px;           /* Ikonli-specific – preferred */
+}
+
 .modal .tile .circular-button {
     -fx-background-radius: 100%;
     -fx-border-radius: 100%;
