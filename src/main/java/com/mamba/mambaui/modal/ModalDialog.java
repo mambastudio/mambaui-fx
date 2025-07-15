@@ -153,7 +153,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     @Override
     public final ObjectProperty<Node> headerProperty() {return headerProperty;}
     @Override
-    public final void setHeader(Node content) {this.headerProperty.set(content);}
+    public final void setHeader(Node header) {this.headerProperty.set(header);}
     @Override
     public final Node getHeader() {return headerProperty.get();}
     
@@ -167,7 +167,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     @Override
     public final ObjectProperty<Node> footerProperty() {return footerProperty;}
     @Override
-    public final void setFooter(Node content) {this.footerProperty.set(content);}
+    public final void setFooter(Node footer) {this.footerProperty.set(footer);}
     @Override
     public final Node getFooter() {return footerProperty.get();}
     

@@ -4,6 +4,7 @@ com\mamba\mambaui\base\RectLayout.class
 com\mamba\mambaui\modal\ModalDialog$ModalHandle.class
 com\mamba\mambaui\modal\ModalDialogBase.class
 com\mamba\mambaui\base\RectLayout$RectPair.class
+com\mamba\mambaui\modal\ModalDialogs$ErrorDialog.class
 com\mamba\mambaui\modal\ModalDialogs.class
 com\mamba\mambaui\MambauiUtility.class
 com\mamba\mambaui\modal\ModalDialog$1.class

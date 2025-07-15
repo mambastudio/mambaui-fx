@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -22,7 +23,6 @@ import javafx.stage.Stage;
 public class ModalApplication extends Application{
     @Override
     public void start(Stage stage) throws Exception {
-        
         var dialog = ModalDialogs.information("Are you sure you want to proceed?");
         
         Button btn = new Button("Open");

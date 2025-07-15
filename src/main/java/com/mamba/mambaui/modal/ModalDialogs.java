@@ -6,11 +6,14 @@ package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.control.Tile;
 import java.io.IO;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -68,8 +71,8 @@ public class ModalDialogs {
     public static class InformationDialog extends ModalDialog<Void> {
         private final StringProperty messageText = new SimpleStringProperty();
 
-        public InformationDialog(String message) {
-            var label = new Label(message);
+        public InformationDialog(String message) {            
+            var label = new Label();
             label.setWrapText(true);
             
             super((handle, dialog) -> {
@@ -77,8 +80,7 @@ public class ModalDialogs {
                 ok.setOnAction(e -> handle.cancel());
 
                 var box = new VBox(label);
-                handle.setContent(box);
-
+                
                 var buttonBar = new ButtonBar();
                 ButtonBar.setButtonData(ok, ButtonBar.ButtonData.YES);
                 buttonBar.getButtons().addAll(ok);
@@ -93,12 +95,66 @@ public class ModalDialogs {
                 handle.setContent(box);
                 handle.setFooter(buttonBar);                
             });
-            
+            setMessage(message);
             label.textProperty().bind(messageText);            
         } 
         
-        public void setMessage(String text){
+        public final void setMessage(String text){
             messageText.set(text);
         }        
+    }
+    
+    public static class ErrorDialog extends ModalDialog<Void> {
+        private final StringProperty messageText = new SimpleStringProperty();
+
+        public ErrorDialog(String title, String message) {            
+            var messageArea = new TextArea();
+            Tile header = new Tile(title);
+            messageArea.setEditable(false);
+            
+            super((handle, dialog) -> {
+                var ok = new Button("Close");
+                ok.setOnAction(e -> handle.cancel());
+
+                var box = new VBox(messageArea);
+                
+                var buttonBar = new ButtonBar();
+                ButtonBar.setButtonData(ok, ButtonBar.ButtonData.YES);
+                buttonBar.getButtons().addAll(ok);
+
+                FontIcon icon = error();                
+                icon.getStyleClass().add("header-help");
+                header.setRight(icon);
+                
+                dialog.setDialogSize(350, 150);
+                handle.setHeader(header);
+                handle.setContent(box);
+                handle.setFooter(buttonBar);                
+            });
+            setMessage(message);
+            messageArea.textProperty().bind(messageText);            
+        } 
+        
+        public ErrorDialog(Throwable error) {
+            String title = error.getClass().getSimpleName(); // e.g., NullPointerException
+            String message = error.getMessage();             // e.g., "Variable x was null"
+            message += "\n\n";
+            
+            StringWriter sw = new StringWriter();
+            error.printStackTrace(new PrintWriter(sw));
+            message += sw.toString();
+            
+            this(title, message);
+        }
+        
+        private void setMessage(String text){
+            messageText.set(text);
+        } 
+        
+        private String getStackTrace(Throwable t) {
+            StringWriter sw = new StringWriter();
+            t.printStackTrace(new PrintWriter(sw));
+            return sw.toString();
+        }
     }
 }

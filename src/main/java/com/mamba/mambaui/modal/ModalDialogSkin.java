@@ -6,8 +6,6 @@ package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.MambauiUtility;
 import com.mamba.mambaui.control.Tile;
-import java.io.IO;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -16,12 +14,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Skin;
 import javafx.scene.control.SkinBase;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 
 /**
  *
@@ -49,7 +45,6 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
     public ModalDialogSkin(ModalDialog dialog) {
         super(dialog); 
                 
-        IO.println(dialog.getContent());
         dialogPane.setTop(dialog.getHeader());
         dialogPane.setCenter(dialog.getContent());
         dialogPane.setBottom(dialog.getFooter());
