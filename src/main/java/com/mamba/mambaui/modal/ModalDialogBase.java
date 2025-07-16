@@ -6,6 +6,7 @@ package com.mamba.mambaui.modal;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 
@@ -15,6 +16,10 @@ import javafx.scene.Node;
  * @param <T>
  */
 public interface ModalDialogBase<T> {
+    
+    default void showAndWait(Consumer<Optional<T>> onResult) {
+        Platform.runLater(() -> onResult.accept(showAndWait()));
+    }
     Optional<T> showAndWait();
     void close();
         

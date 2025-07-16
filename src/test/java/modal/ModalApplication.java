@@ -7,12 +7,10 @@ package modal;
 import com.mamba.mambaui.MambauiTheme;
 import com.mamba.mambaui.modal.ModalDialogs;
 import java.io.IO;
-import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -26,13 +24,14 @@ public class ModalApplication extends Application{
         var dialog = ModalDialogs.information("Are you sure you want to proceed?");
         
         Button btn = new Button("Open");
-        btn.setOnAction(e-> {            
-            var result = dialog.showAndWait();               
-                
-            switch(result.isPresent()){
-                case true -> IO.println(result.get());
-                case false -> IO.println("cancelled");
-            }
+        btn.setOnAction(e-> {        
+            dialog.showAndWait(result -> {
+                switch(result.isPresent()){
+                    case true -> IO.println(result.get());
+                    case false -> IO.println("cancelled");
+                }
+                dummyCall();
+            });            
         });
         
         Scene scene = new Scene(new StackPane(dialog, btn), 1000, 700);
@@ -44,4 +43,7 @@ public class ModalApplication extends Application{
         stage.show(); 
     }
     
+    public void dummyCall(){
+        IO.println("kubafu");
+    }
 }
