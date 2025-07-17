@@ -9,6 +9,8 @@ import com.mamba.mambaui.base.RectLayout.Rect;
 import com.mamba.mambaui.base.RectLayout.RectCut;
 import com.mamba.mambaui.base.RectLayout.RectCutSide;
 import java.util.Objects;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -27,6 +29,9 @@ public class Tile extends Region{
     Node left, right;
     Label header, description;
     double margin = 5;
+    
+    private StringProperty headerProperty = new SimpleStringProperty();
+    private StringProperty descriptionProperty = new SimpleStringProperty();
         
     record RectTile(Rect leftRect, Rect headerRect, Rect descriptionRect, Rect rightRect){
         RectTile{
@@ -60,15 +65,20 @@ public class Tile extends Region{
     
     public Tile(){
         getStyleClass().add("tile");
+        header = new Label();
+        header.getStyleClass().add("header");
+        description = new Label();
+        description.setWrapText(true);
+        description.getStyleClass().add("description");
     }
     
     public Tile(String header){
-        getStyleClass().add("tile");
+        this();
         setHeader(header);
     }
     
     public Tile(String header, String description){
-        getStyleClass().add("tile");
+        this();
         setHeader(header);
         setDescription(description);        
     }
