@@ -21,15 +21,12 @@ import javafx.stage.Stage;
 public class ModalApplication extends Application{
     @Override
     public void start(Stage stage) throws Exception {
-        var dialog = ModalDialogs.information("Are you sure you want to proceed?");
-        
+        var dialog = ModalDialogs.error();
+        Exception dummyException = new RuntimeException("Simulated Exception for Testing");
         Button btn = new Button("Open");
-        btn.setOnAction(e-> {        
-            dialog.showAndWait(result -> {
-                switch(result.isPresent()){
-                    case true -> IO.println(result.get());
-                    case false -> IO.println("cancelled");
-                }
+        btn.setOnAction(e-> { 
+            dialog.setStackTrace(dummyException);
+            dialog.showAndWait(result -> {               
                 dummyCall();
             });            
         });

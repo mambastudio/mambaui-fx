@@ -5,7 +5,6 @@
 package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.MambauiUtility;
-import com.mamba.mambaui.control.Tile;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -39,7 +38,6 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         
     protected final StackPane root;
     protected final BorderPane dialogPane = new BorderPane();
-    protected Tile header = new Tile();
     protected Button closeBtn = MambauiUtility.buttonIcon("mdal-close", 30, "circular-button", "close-icon");
     
     public ModalDialogSkin(ModalDialog dialog) {
@@ -73,8 +71,6 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
     
     private void initGraphics(){
         this.dialogPane.getStyleClass().add("pane"); 
-        header.setPrefHeight(90);
-       // dialogPane.setTop(header);
         
         root.getChildren().add(dialogPane); //add pane first to root stack
         getChildren().add(root); //add root to skin
@@ -95,10 +91,7 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         closeBtn.setOnAction(e->{
              ((ModalDialog<?>) getSkinnable()).close();
         });
-       
-        header.setPadding(new Insets(5));        
-        header.getStyleClass().add("tile");
-        
+               
         this.dialogPane.setPadding(new Insets(5));
         
         //Add capture (parent -> child) detection and apply default cursor
@@ -214,36 +207,7 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
             default -> Cursor.DEFAULT;
         };
     }
-            
-    public void setHeaderTitle(String title) {
-        header.setHeader(title);
-    }
-
-    public void setHeaderDescription(String description) {        
-        header.setDescription(description);
-    }
-    
-    public void setHeaderGraphic(Node graphic) {        
-        header.setLeft(graphic);
-    }
-
-    public void setHeader(Node graphic, String title, String description) {
-        header.setHeader(title);
-        header.setDescription(description);
-        header.setLeft(graphic);
-    }
-    
-    public void setGraphic(Node graphic){
-        header.setLeft(graphic);
-    }
-
-    public void setCloseButtonActive(boolean active) {
-        switch(active){
-            case true -> header.setRight(closeBtn);
-            case false -> header.setRight(null);
-        }
-    }
-    
+     
     private boolean isInteractiveControl(Node node) {
         while (node != null) {
             if (node instanceof javafx.scene.control.Control control && control.isFocusTraversable()) {

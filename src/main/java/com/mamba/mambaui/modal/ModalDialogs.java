@@ -10,10 +10,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -25,11 +27,11 @@ public class ModalDialogs {
     private ModalDialogs(){        
     }
     
-    public static FontIcon info()    { return new FontIcon("mdoal-announcement"); }
-    public static FontIcon warning() { return new FontIcon("mdsmz-warning"); }
-    public static FontIcon error()   { return new FontIcon("mdral-error_outline"); }
-    public static FontIcon help()    { return new FontIcon("mdral-help_outline"); }
-    public static FontIcon success() { return new FontIcon("mdral-done_all"); }
+    public static FontIcon infoIcon()    { return new FontIcon("mdoal-announcement"); }
+    public static FontIcon warningIcon() { return new FontIcon("mdsmz-warning"); }
+    public static FontIcon errorIcon()   { return new FontIcon("mdral-error_outline"); }
+    public static FontIcon helpIcon()    { return new FontIcon("mdral-help_outline"); }
+    public static FontIcon successIcon() { return new FontIcon("mdral-done_all"); }
         
     public static ConfirmDialog confirm(String message) {
         var dialog = new ConfirmDialog(message);        
@@ -39,7 +41,12 @@ public class ModalDialogs {
     public static InformationDialog information(String message) {
         var dialog = new InformationDialog(message);        
         return dialog;
-    }  
+    } 
+    
+    public static ErrorDialog error() {
+        var dialog = new ErrorDialog();        
+        return dialog;
+    } 
     
     public static class ConfirmDialog extends ModalDialog<Boolean> {
         public ConfirmDialog(String message) {
@@ -56,7 +63,7 @@ public class ModalDialogs {
 
                 Tile header = new Tile("Confirmation", message);                
 
-                FontIcon icon = success();
+                FontIcon icon = successIcon();
                 icon.getStyleClass().add("header-help");
                 header.setRight(icon);
                 
@@ -70,7 +77,7 @@ public class ModalDialogs {
     
     public static class InformationDialog extends ModalDialog<Void> {
         private final StringProperty messageText = new SimpleStringProperty();
-
+        
         public InformationDialog(String message) {            
             var label = new Label();
             label.setWrapText(true);
@@ -86,7 +93,7 @@ public class ModalDialogs {
                 buttonBar.getButtons().addAll(ok);
 
                 Tile header = new Tile("Information");
-                FontIcon icon = info();                
+                FontIcon icon = infoIcon();                
                 icon.getStyleClass().add("header-help");
                 header.setRight(icon);
                 
@@ -108,6 +115,10 @@ public class ModalDialogs {
         private final StringProperty headerTextProperty = new SimpleStringProperty();
         private final StringProperty messageTextProperty = new SimpleStringProperty();
         
+        public ErrorDialog() {       
+            this("","No error message");
+        }
+        
         public ErrorDialog(String title, String message) {            
             var messageArea = new TextArea();
             messageArea.setEditable(false);            
@@ -118,16 +129,19 @@ public class ModalDialogs {
                 ok.setOnAction(e -> handle.cancel());
 
                 var box = new VBox(messageArea);
+                box.setPadding(new Insets(0, 0, 5, 0));
+                
+                VBox.setVgrow(messageArea, Priority.ALWAYS);
                 
                 var buttonBar = new ButtonBar();
                 ButtonBar.setButtonData(ok, ButtonBar.ButtonData.YES);
                 buttonBar.getButtons().addAll(ok);
 
-                FontIcon icon = error();                
+                FontIcon icon = errorIcon();                
                 icon.getStyleClass().add("header-help");
                 header.setRight(icon);
                 
-                dialog.setDialogSize(350, 150);
+                dialog.setDialogSize(550, 350);
                 handle.setHeader(header);
                 handle.setContent(box);
                 handle.setFooter(buttonBar);                
@@ -142,9 +156,9 @@ public class ModalDialogs {
         
         public ErrorDialog(Throwable error) {
             String title = error.getClass().getSimpleName(); // e.g., NullPointerException
-            String message = error.getMessage();             // e.g., "Variable x was null"
-            message += "\n\n";
             
+            String message = error.getMessage();             // e.g., "Variable x was null"
+            message += "\n\n";            
             StringWriter sw = new StringWriter();
             error.printStackTrace(new PrintWriter(sw));
             message += sw.toString();
@@ -152,18 +166,25 @@ public class ModalDialogs {
             this(title, message);
         }
         
-        private void setHeader(String text){
+        public final void setHeader(String text){
             headerTextProperty.setValue(text);
         }
         
-        private void setMessage(String text){
+        public final void setMessage(String text){
             messageTextProperty.setValue(text);
         } 
         
-        private String getStackTrace(Throwable t) {
+        public final void setStackTrace(Throwable t) {
+            String title = t.getClass().getSimpleName(); // e.g., NullPointerException
+            
+            String message = t.getMessage();             // e.g., "Variable x was null"
+            message += "\n\n";            
             StringWriter sw = new StringWriter();
             t.printStackTrace(new PrintWriter(sw));
-            return sw.toString();
+            message += sw.toString();
+            
+            setHeader(title);
+            setMessage(message);
         }
     }
 }
