@@ -4,15 +4,13 @@
  */
 package com.mamba.mambaui.modal;
 
-import java.io.IO;
+import com.mamba.mambaui.control.Tile;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
@@ -37,9 +35,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     
     private final DoubleProperty widthDialogProperty = new SimpleDoubleProperty();
     private final DoubleProperty heightDialogProperty = new SimpleDoubleProperty();
-    
-    private final BooleanProperty triggerDialogProperty = new SimpleBooleanProperty(false);
-            
+                
     private Optional<T> result = Optional.empty();
     
     private boolean exited = true;
@@ -180,11 +176,13 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     public final void setHeightDialog(double width) {this.heightDialogProperty.set(width);}    
     public final double getHeightDialog() {return heightDialogProperty.get();}
     
-    public final BooleanProperty triggerDialogProperty() {return triggerDialogProperty;}    
-    
     public final void setDialogSize(double width, double height){
         setWidthDialog(width);
         setHeightDialog(height);
+    }
+    
+    public final void setTileHeader(Tile tile){
+        setHeader(tile);
     }
     
     public interface ModalHandle<T> {

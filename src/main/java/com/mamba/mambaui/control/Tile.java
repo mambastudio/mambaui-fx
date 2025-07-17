@@ -4,7 +4,6 @@
  */
 package com.mamba.mambaui.control;
 
-import com.mamba.mambaui.MambauiTheme;
 import com.mamba.mambaui.base.RectLayout.Rect;
 import com.mamba.mambaui.base.RectLayout.RectCut;
 import com.mamba.mambaui.base.RectLayout.RectCutSide;
@@ -30,8 +29,8 @@ public class Tile extends Region{
     Label header, description;
     double margin = 5;
     
-    private StringProperty headerProperty = new SimpleStringProperty();
-    private StringProperty descriptionProperty = new SimpleStringProperty();
+    private final StringProperty headerProperty = new SimpleStringProperty();
+    private final StringProperty descriptionProperty = new SimpleStringProperty();
         
     record RectTile(Rect leftRect, Rect headerRect, Rect descriptionRect, Rect rightRect){
         RectTile{
@@ -64,12 +63,19 @@ public class Tile extends Region{
     }
     
     public Tile(){
-        getStyleClass().add("tile");
-        header = new Label();
-        header.getStyleClass().add("header");
-        description = new Label();
-        description.setWrapText(true);
-        description.getStyleClass().add("description");
+        this.getStyleClass().add("tile");
+        this.header = new Label();
+        this.header.getStyleClass().add("header");
+        this.description = new Label();
+        this.description.setWrapText(true);
+        this.description.getStyleClass().add("description");
+        this.description.setAlignment(Pos.TOP_LEFT);
+        
+        this.header.textProperty().bind(headerProperty);
+        this.description.textProperty().bind(descriptionProperty);
+        
+        updateSlot(header, header);
+        updateSlot(description, description);
     }
     
     public Tile(String header){
@@ -104,19 +110,19 @@ public class Tile extends Region{
     }
 
     public final void setHeader(String string) {
-        Label label = new Label(string);
-        label.getStyleClass().add("header");
-        updateSlot(this.header, label);
-        this.header = label;
+        this.headerProperty.setValue(string);
     }
 
-    public final void setDescription(String string) {
-        Label label = new Label(string);
-        label.setWrapText(true);
-        label.getStyleClass().add("description");
-        updateSlot(this.description, label);
-        this.description = label;
-        this.description.setAlignment(Pos.TOP_LEFT);
+    public final void setDescription(String string) {        
+        this.descriptionProperty.setValue(string);        
+    }
+    
+    public StringProperty headerProperty(){
+        return headerProperty;
+    }
+    
+    public StringProperty descriptionProperty(){
+        return descriptionProperty;
     }
     
     private void updateSlot(Node oldNode, Node newNode) {
@@ -129,7 +135,7 @@ public class Tile extends Region{
     }
     
     @Override
-    public ObservableList<Node> getChildren(){
+    public final ObservableList<Node> getChildren(){
         return FXCollections.unmodifiableObservableList(super.getChildren());
     }
     
@@ -169,8 +175,6 @@ public class Tile extends Region{
         //IO.println(this.getParent().prefWidth(-1));
         RectTile tileLayout = getRects(layoutRect);
         
-        
-                               
         if(tileLayout.hasLeft()){            
             layoutInArea(
                     left, 

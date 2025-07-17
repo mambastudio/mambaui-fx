@@ -67,11 +67,6 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         dialog.heightDialogProperty().addListener((_, _, newVal)->{
             setDialogHeight((double) newVal);
         });
-        dialog.triggerDialogProperty().addListener(o->{
-            root.requestFocus(); //DOES NOT WORK TO DESIRED OUTCOME - THIS SECTION IS TO INVESTIGATE SKIN CALLS FROM CONTROL
-            
-        });
-            
               
         initGraphics();        
     }

@@ -105,12 +105,13 @@ public class ModalDialogs {
     }
     
     public static class ErrorDialog extends ModalDialog<Void> {
-        private final StringProperty messageText = new SimpleStringProperty();
-
+        private final StringProperty headerTextProperty = new SimpleStringProperty();
+        private final StringProperty messageTextProperty = new SimpleStringProperty();
+        
         public ErrorDialog(String title, String message) {            
             var messageArea = new TextArea();
-            Tile header = new Tile(title);
-            messageArea.setEditable(false);
+            messageArea.setEditable(false);            
+            var header = new Tile(title);
             
             super((handle, dialog) -> {
                 var ok = new Button("Close");
@@ -131,8 +132,12 @@ public class ModalDialogs {
                 handle.setContent(box);
                 handle.setFooter(buttonBar);                
             });
+            
+            setHeader(header);
+            header.headerProperty().bind(headerTextProperty);   
+            
             setMessage(message);
-            messageArea.textProperty().bind(messageText);            
+            messageArea.textProperty().bind(messageTextProperty);            
         } 
         
         public ErrorDialog(Throwable error) {
@@ -147,8 +152,12 @@ public class ModalDialogs {
             this(title, message);
         }
         
+        private void setHeader(String text){
+            headerTextProperty.setValue(text);
+        }
+        
         private void setMessage(String text){
-            messageText.set(text);
+            messageTextProperty.setValue(text);
         } 
         
         private String getStackTrace(Throwable t) {
