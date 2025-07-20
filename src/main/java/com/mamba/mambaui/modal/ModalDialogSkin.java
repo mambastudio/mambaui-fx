@@ -14,9 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Skin;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -48,7 +50,8 @@ public final class ModalDialogSkin extends SkinBase<ModalDialog> implements Skin
         dialogPane.setBottom(dialog.getFooter());
         setDialogSize(dialog.getWidthDialog(), dialog.getHeightDialog());
         
-        root = new StackPane();  
+        root = new StackPane();         
+        root.getStyleClass().add("glass");
 
         dialog.headerProperty().addListener((_, _, newVal)->{
             dialogPane.setTop((Node) newVal);

@@ -7,6 +7,10 @@
     -circular-close-icon-size: 20px;    
 }
 
+.modal .glass{
+    -fx-background-color: red;
+}
+
 .modal .pane{
     -fx-background-color: -fx-background;
     -fx-border-color: -fx-box-border;
