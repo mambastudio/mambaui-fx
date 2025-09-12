@@ -23,8 +23,13 @@ public class CloseButtonApplication  extends Application{
     public void start(Stage stage) throws Exception {
         
         Button closeBtn = MambauiUtility.buttonIcon("mdal-close", 30, "circular-button", "close-icon");
-        
-        Scene scene = new Scene(new StackPane(closeBtn), 200, 200);
+        StackPane stack1 = new StackPane();
+        stack1.getStyleClass().add("modal");    
+        StackPane stack2 = new StackPane();
+        stack2.getStyleClass().add("tile");
+        stack1.getChildren().add(stack2);
+        stack2.getChildren().add(closeBtn);
+        Scene scene = new Scene(stack1, 200, 200);
         
         MambauiTheme.applyTo(scene);
         
