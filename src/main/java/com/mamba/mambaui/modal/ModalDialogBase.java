@@ -18,9 +18,9 @@ import javafx.scene.Node;
 public interface ModalDialogBase<T> {
     
     default void showAndWait(Consumer<Optional<T>> onResult) {
-        Platform.runLater(() -> onResult.accept(showAndWait()));
+        Platform.runLater(() -> onResult.accept(displayAndReturn()));
     }
-    Optional<T> showAndWait();
+    Optional<T> displayAndReturn();
     void close();
         
     ObjectProperty<Node> headerProperty();

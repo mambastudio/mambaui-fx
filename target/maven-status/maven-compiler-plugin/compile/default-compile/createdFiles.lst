@@ -1,6 +1,7 @@
 com\mamba\mambaui\modal\ModalDialogManager.class
 com\mamba\mambaui\base\RectLayout$RectCutSide.class
 com\mamba\mambaui\base\RectLayout.class
+com\mamba\mambaui\modal\ModalDialogUtil.class
 com\mamba\mambaui\modal\ModalDialog$ModalHandle.class
 com\mamba\mambaui\modal\ModalDialogBase.class
 com\mamba\mambaui\base\RectLayout$RectPair.class

@@ -39,10 +39,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     private Optional<T> result = Optional.empty();
     
     private boolean exited = true;
-    
-    private static final double VIEW_ORDER_ON_TOP = -1000;
-    private static final double VIEW_ORDER_HIDDEN = 1000;
-    
+        
     public ModalDialog(BiConsumer<ModalHandle<T>, ModalDialog<T>> dialogBuilder){        
         getStyleClass().add("modal");  
         hide();
@@ -105,9 +102,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
         return ModalDialog.class.getResource("modal.css").toExternalForm();
     }
             
-    private void show(){
-        
-        this.setViewOrder(VIEW_ORDER_ON_TOP);
+    private void show(){        
         this.setDisable(false);
         this.toFront(); 
         this.setOpacity(1);
@@ -115,7 +110,6 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     
     private void hide(){
         this.setOpacity(0);
-        this.setViewOrder(VIEW_ORDER_HIDDEN);
         this.setDisable(true);
         this.toBack();
     }
@@ -128,7 +122,7 @@ public class ModalDialog<T> extends Control implements ModalDialogBase<T>{
     }
       
     @Override
-    public Optional<T> showAndWait() {
+    public Optional<T> displayAndReturn() {
         if(this.getParent() == null)
             throw new UnsupportedOperationException("Current invoked dialog has no parent");
         
