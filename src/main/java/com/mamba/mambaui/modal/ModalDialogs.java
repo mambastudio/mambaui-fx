@@ -5,7 +5,6 @@
 package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.control.Tile;
-import java.io.IO;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import javafx.beans.property.SimpleStringProperty;

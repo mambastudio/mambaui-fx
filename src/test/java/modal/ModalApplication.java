@@ -6,9 +6,7 @@ package modal;
 
 import com.mamba.mambaui.MambauiTheme;
 import com.mamba.mambaui.modal.ModalDialogs;
-import java.io.IO;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -27,7 +25,7 @@ public class ModalApplication extends Application{
         btn.setOnAction(e-> { 
             dialog.setStackTrace(dummyException);
             dialog.showAndWait(result -> {               
-                dummyCall();
+                //dummyCall();
             });            
         });
         
@@ -40,7 +38,4 @@ public class ModalApplication extends Application{
         stage.show(); 
     }
     
-    public void dummyCall(){
-        IO.println("kubafu");
-    }
 }
