@@ -7,18 +7,9 @@ package com.mamba.mambaui.control;
 import com.mamba.mambaui.base.RectLayout.Rect;
 import com.mamba.mambaui.base.RectLayout.RectCut;
 import com.mamba.mambaui.base.RectLayout.RectCutSide;
-import java.util.Objects;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.Node;
+import module java.base;
+import module javafx.controls;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Region;
-import javafx.scene.shape.Rectangle;
 
 /**
  *

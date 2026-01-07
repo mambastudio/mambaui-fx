@@ -1,6 +1,6 @@
 closebutton\CloseButtonLauncher.class
-tile\TileLauncher.class
-modal\ModalLauncher.class
 modal\ModalApplication.class
 tile\TileApplication.class
+tile\TileLauncher.class
+modal\ModalLauncher.class
 closebutton\CloseButtonApplication.class

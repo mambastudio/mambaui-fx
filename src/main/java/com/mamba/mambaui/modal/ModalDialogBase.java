@@ -4,12 +4,8 @@
  */
 package com.mamba.mambaui.modal;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.scene.Node;
-
+import module javafx.controls;
+import module java.base;
 /**
  *
  * @author user

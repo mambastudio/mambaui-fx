@@ -5,20 +5,10 @@
 package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.control.Tile;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.css.CssMetaData;
-import javafx.css.Styleable;
-import javafx.css.StyleablePropertyFactory;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
-import javafx.scene.control.Skin;
+
+import module javafx.base;
+import module javafx.controls;
+import module java.base;
 
 /**
  *

@@ -5,18 +5,8 @@
 package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.MambauiUtility;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Skin;
-import javafx.scene.control.SkinBase;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+
+import module javafx.controls;
 
 /**
  *

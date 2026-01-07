@@ -5,17 +5,9 @@
 package com.mamba.mambaui.modal;
 
 import com.mamba.mambaui.control.Tile;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
+import module javafx.controls;
+import module java.base;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**

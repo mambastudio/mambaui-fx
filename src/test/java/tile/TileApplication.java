@@ -7,15 +7,8 @@ package tile;
 
 import com.mamba.mambaui.LoremIpsum;
 import com.mamba.mambaui.MambauiTheme;
-import com.mamba.mambaui.MambauiUtility;
 import com.mamba.mambaui.control.Tile;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import module javafx.controls;
 
 /**
  *

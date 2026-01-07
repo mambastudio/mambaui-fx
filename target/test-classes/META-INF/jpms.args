@@ -1,0 +1,4 @@
+--patch-module
+mambauifx=_
+--add-reads
+mambauifx=ALL-UNNAMED
